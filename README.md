@@ -40,6 +40,16 @@ Works seamlessly in **private chats** and **group chats**.
 
 ---
 
+## 👥 Use in a Group
+
+1. **Add the bot to your group and make it an admin** with the *Delete messages* right. As an admin it receives every image (Telegram's privacy mode hides other messages from bots), and it can remove the originals after upload.
+2. **Each member saves their own key first:** open the bot in a private chat, tap **Add Key** (`/start`), and send the imgbb API key. That member's uploads then go to their own imgbb account.
+3. **Send a photo, an image file or an album in the group.** The bot replies in the group with the link (one reply for a whole album), removes the original message, and sends the delete link to the uploader in a private chat; it is also in their `/history`. Each member's `/expire` setting applies to their group uploads too.
+
+The bot stays silent in the group for members without a saved key, for files that are not images, and for messages from anonymous admins or channels. Commands and image links work in the private chat only.
+
+---
+
 ## 🛠 Prerequisites
 
 - Python 3.10 or higher (or Docker)
