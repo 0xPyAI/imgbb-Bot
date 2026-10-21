@@ -1,0 +1,74 @@
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pyrogram_imgbb_bot
+    restart: unless-stopped
+    # Every setting, DATABASE_URL included, comes from config.env
+    env_file:
+      - config.env
+    depends_on:
+      db:
+        condition: service_healthy
+        required: false  # only when the local-db profile is enabled
+    volumes:
+      # Only the session directory: a volume over /app would hide new code
+      # behind the copy saved in the volume on the first run
+      - bot_data:/app/data
+    # The bot gives running uploads up to 30 s to finish when it stops
+    stop_grace_period: 45s
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 1536M
+        reservations:
+          cpus: "0.2"
+          memory: 256M
+
+  # Optional bundled PostgreSQL, for when you have no database of your own.
+  # Start it with `docker compose --profile local-db up -d` and set
+  # DATABASE_URL=postgresql://postgres:<POSTGRES_PASSWORD>@db:5432/imgbb_bot in config.env.
+  db:
+    image: postgres:16-alpine
+    profiles: ["local-db"]
+    container_name: pyrogram_imgbb_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres_password}
+      POSTGRES_DB: ${POSTGRES_DB:-imgbb_bot}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-imgbb_bot}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+
+volumes:
+  postgres_data:
+  bot_data:

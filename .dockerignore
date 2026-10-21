@@ -1,0 +1,40 @@
+# Git & VCS
+.git/
+.gitignore
+
+# Environment and secrets
+*.env
+config.env
+.env*
+!config.env.example
+
+# Session files
+*.session
+*.session-journal
+
+# Python caches and bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+
+# Testing & Coverage
+.pytest_cache/
+.ruff_cache/
+tests/
+.github/
+.coverage
+htmlcov/
+
+# Local media & logs
+downloads/
+*.log

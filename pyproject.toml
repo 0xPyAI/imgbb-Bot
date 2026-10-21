@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyrogram-imgbb-bot"
+version = "2.2.0"
+description = "Production-ready Telegram bot for automated image uploads to imgbb with per-user encrypted keys."
+authors = [{name = "Aswathvanan"}]
+readme = "README.md"
+requires-python = ">=3.10"
+# Ranges live here; requirements.txt and requirements-dev.txt are exact pins
+# compiled from this list (see the command at the top of each file)
+dependencies = [
+    # Kurigram is an actively-maintained Pyrogram fork that still imports as `pyrogram`
+    "kurigram>=2.2.26",
+    "python-dotenv>=1.0.1",
+    # The [asyncio] extra pulls in greenlet, which SQLAlchemy 2.1+ no longer
+    # installs by default; without it the async engine fails at import time
+    "sqlalchemy[asyncio]>=2.0.25",
+    "asyncpg>=0.29.0",
+    "httpx>=0.27.0",
+    "cryptography>=42.0.0",
+    # Much faster MTProto downloads. Wheels exist for x86-64 Linux up to Python
+    # 3.11 only; elsewhere pip would need a C compiler, which slim images lack
+    "tgcrypto>=1.2.5; sys_platform == 'linux' and platform_machine == 'x86_64' and python_version < '3.12'",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "ruff>=0.3.0",
+]
+
+[tool.setuptools]
+py-modules = ["commands", "config", "crypto", "dbmodels", "http_client", "pyro"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B"]
+ignore = ["E501"]

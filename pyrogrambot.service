@@ -1,0 +1,45 @@
+[Unit]
+Description=Telegram imgbb Upload Bot Service
+Wants=network-online.target postgresql.service
+After=network-online.target postgresql.service
+
+[Service]
+Type=simple
+User=appuser
+Group=appuser
+WorkingDirectory=/opt/pyrogrambot
+EnvironmentFile=/opt/pyrogrambot/config.env
+ExecStart=/opt/pyrogrambot/venv/bin/python pyro.py
+Restart=always
+RestartSec=5s
+# The bot gives running uploads up to 30 s to finish when it stops
+TimeoutStopSec=45s
+
+# Security and Sandboxing
+NoNewPrivileges=true
+ProtectSystem=strict
+# bot.session and Kurigram's unknown_errors.txt live in the working directory
+ReadWritePaths=/opt/pyrogrambot
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+RestrictSUIDSGID=true
+LockPersonality=true
+CapabilityBoundingSet=
+
+# Resource limits
+LimitNOFILE=65535
+MemoryMax=1.5G
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pyrogrambot
+
+[Install]
+WantedBy=multi-user.target

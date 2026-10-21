@@ -1,0 +1,35 @@
+# Environment and secrets
+config.env
+.env
+*.env
+!config.env.example
+
+# Session files
+*.session
+*.session-journal
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# Downloads and runtime data
+downloads/
+data/
+unknown_errors.txt
+
+# Test and lint caches
+.pytest_cache/
+.ruff_cache/
+
+# Logs
+*.log
